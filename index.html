@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+    <header>
+        <div class="container">
+
+            <h1 class="logo">🌤️ Weather Dashboard</h1>
+
+            <div class="search-container">
+                <input type="text" id="searchBox" placeholder="Enter city name...">
+
+                <button id="searchButton">
+                    Search
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+
+    <main class="main-container">
+
+        <section id="loading" class="hidden">
+            <p></p>
+        </section>
+
+
+        <section id="error" class="hidden">
+            <p></p>
+        </section>
+
+
+        <section id="weatherCard">
+
+            <h2 id="cityName">
+
+            </h2>
+
+            <p id="dateTime">
+
+            </p>
+
+            <img id="weatherIcon" src="" alt="Weather Icon">
+
+            <h1 id="temperature">
+
+            </h1>
+
+            <p id="description">
+
+            </p>
+
+            <div class="weather-details">
+
+                <div class="detail-card">
+                    <h3>Feels Like</h3>
+                    <p id="feelsLike"></p>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Humidity</h3>
+                    <p id="humidity"></p>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Wind Speed</h3>
+                    <p id="windSpeed"></p>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Pressure</h3>
+                    <p id="pressure"></p>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Visibility</h3>
+                    <p id="visibility"></p>
+                </div>
+
+            </div>
+
+            <button id="refreshButton">
+                Refresh Weather
+            </button>
+
+            <p id="lastUpdated">
+            </p>
+
+        </section>
+
+
+
+
+        <section id="searchHistory">
+
+            <h2>Recent Searches</h2>
+
+            <ul id="historyList">
+
+
+            </ul>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            Made by <strong>Hasnat Ali Awan</strong>
+        </p>
+
+    </footer>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
