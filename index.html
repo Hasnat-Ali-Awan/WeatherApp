@@ -31,12 +31,13 @@
     <main class="main-container">
 
         <section id="loading" class="hidden">
-            <p></p>
+            <div id="spinner"></div>
+            <p>Loading weather ....</p>
         </section>
 
 
         <section id="error" class="hidden">
-            <p></p>
+            <p>Got internet Issue</p>
         </section>
 
 
@@ -101,15 +102,10 @@
 
 
 
-        <section id="searchHistory">
+        <section>
+            <h3>Recent Searches</h3>
 
-            <h2>Recent Searches</h2>
-
-            <ul id="historyList">
-
-
-            </ul>
-
+            <div id="recentSearches"></div>
         </section>
 
     </main>

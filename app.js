@@ -17,7 +17,8 @@ const visibility = document.getElementById("visibility");
 
 const loading = document.getElementById("loading");
 const error = document.getElementById("error");
-
+let isLoading = false;
+renderRecentSearches();
 searchButton.addEventListener("click", () => {
     getWeather();
 });
@@ -31,22 +32,41 @@ searchBox.addEventListener("keypress", (event) => {
 const refreshButton = document.getElementById("refreshButton");
 
 refreshButton.addEventListener("click", () => {
-    getWeather();
-});
-async function getWeather() {
+    const recentSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
+    if (recentSearches.length > 0) {
+        const firstcity = recentSearches[0];
+        localStorage.removeItem(firstcity);
+        getWeather(firstcity);
 
-    const city = searchBox.value.trim();
+        return;
+    }
+
+});
+async function getWeather(city = searchBox.value.trim()) {
+    if (isLoading) {
+        console.log("please Wait ")
+        return;
+    };
+    isLoading = true;
+
 
     if (city === "") {
         alert("Please enter a city name.");
+        isLoading = false;
         return;
     }
-    const cachedData = localStorage.getItem(city);
+    const cachedData = JSON.parse(localStorage.getItem(city));
+
     if (cachedData) {
         let tenMinutes = 10 * 60 * 1000;
+
+
         if ((Date.now() - cachedData.time) < tenMinutes) {
             console.log("Using cache data >>>");
-            displayWeather(JSON.parse(cachedData.data));
+            saveRecentSearches(city);
+            displayWeather(cachedData.data);
+            renderRecentSearches();
+            isLoading = false;
             return;
         } else {
             console.log("cache Expires");
@@ -57,6 +77,7 @@ async function getWeather() {
     error.classList.add("hidden");
 
     try {
+
 
         const response = await fetch(
             `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
@@ -72,7 +93,9 @@ async function getWeather() {
             time: Date.now()
         };
         localStorage.setItem(city, JSON.stringify(cache));
+        saveRecentSearches(city);
         displayWeather(data);
+        renderRecentSearches();
 
 
     } catch (err) {
@@ -82,6 +105,7 @@ async function getWeather() {
     } finally {
 
         loading.classList.add("hidden");
+        isLoading = false;
 
     }
 
@@ -122,5 +146,45 @@ function displayWeather(data) {
 
     dateTime.textContent =
         today.toLocaleString();
+
+}
+
+function saveRecentSearches(city) {
+    let recentSearches = JSON.parse(localStorage.getItem("recentSearches")) || [];
+    recentSearches = recentSearches.filter(
+        item => item.toLowerCase() !== city.toLowerCase()
+    );
+
+    recentSearches.unshift(city);
+
+    recentSearches = recentSearches.slice(0, 5);
+
+    localStorage.setItem(
+        "recentSearches",
+        JSON.stringify(recentSearches)
+    );
+}
+
+function renderRecentSearches() {
+
+    const container = document.getElementById("recentSearches");
+
+    container.innerHTML = "";
+
+    const recentSearches =
+        JSON.parse(localStorage.getItem("recentSearches")) || [];
+
+    recentSearches.forEach(city => {
+
+        const button = document.createElement("button");
+
+        button.textContent = city;
+        button.addEventListener("click", () => {
+            searchBox.value = city;
+            getWeather(city);
+        });
+        container.appendChild(button);
+
+    });
 
 }
