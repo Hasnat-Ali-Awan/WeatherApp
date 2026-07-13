@@ -18,7 +18,6 @@ const visibility = document.getElementById("visibility");
 const loading = document.getElementById("loading");
 const error = document.getElementById("error");
 
-
 searchButton.addEventListener("click", () => {
     getWeather();
 });
@@ -42,7 +41,18 @@ async function getWeather() {
         alert("Please enter a city name.");
         return;
     }
-
+    const cachedData = localStorage.getItem(city);
+    if (cachedData) {
+        let tenMinutes = 10 * 60 * 1000;
+        if ((Date.now() - cachedData.time) < tenMinutes) {
+            console.log("Using cache data >>>");
+            displayWeather(JSON.parse(cachedData.data));
+            return;
+        } else {
+            console.log("cache Expires");
+            localStorage.removeItem(city);
+        }
+    }
     loading.classList.remove("hidden");
     error.classList.add("hidden");
 
@@ -57,8 +67,13 @@ async function getWeather() {
         }
 
         const data = await response.json();
-
+        const cache = {
+            data: data,
+            time: Date.now()
+        };
+        localStorage.setItem(city, JSON.stringify(cache));
         displayWeather(data);
+
 
     } catch (err) {
 
